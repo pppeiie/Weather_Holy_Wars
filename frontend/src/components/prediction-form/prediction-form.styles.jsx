@@ -9,8 +9,9 @@ export const PredictionFormContainer = styled.div`
   text-align: left;
 `;
 
-export const SelectionLabel = styled.div`
-  padding: 15px 0;
+export const SelectionLabel = styled.span`
+  display: inline-block;
+  padding: 10px 0px;
   font-size: 1.3em;
   color: dimgray;
 `;

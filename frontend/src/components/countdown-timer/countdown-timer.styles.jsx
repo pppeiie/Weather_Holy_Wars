@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 export const CountdownTimerContainer = styled.div`
   height: 22%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const CustomTimer = styled.div`
