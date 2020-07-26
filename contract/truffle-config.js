@@ -1,4 +1,5 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider')
+require('dotenv').config()
 
 module.exports = {
   networks: {
@@ -12,6 +13,7 @@ module.exports = {
         return new HDWalletProvider(process.env.MNEMONIC, process.env.RPC_URL)
       },
       network_id: '*',
+      gas: 4000000 ,
       // Necessary due to https://github.com/trufflesuite/truffle/issues/1971
       // Should be fixed in Truffle 5.0.17
       skipDryRun: true,
@@ -19,7 +21,7 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: '0.4.24',
+      version: '0.5.0',
     },
   },
 }
