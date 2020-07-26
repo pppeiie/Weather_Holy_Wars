@@ -2,10 +2,11 @@ import React from 'react';
 
 import Countdown from 'react-countdown';
 
+import ReadyAnnouncement from '../ready-announcement/ready-announcement.component';
+
 import {
   CountdownTimerContainer,
   CustomTimer,
-  TimesUpText,
   RemainingTimeText,
   TimerValue,
   TimerDescription
@@ -13,11 +14,11 @@ import {
 
 const renderer = ({ minutes, seconds, completed }) =>
   completed ? (
-    <TimesUpText>Times up !</TimesUpText>
+    <ReadyAnnouncement />
   ) : (
     <CustomTimer>
-      <RemainingTimeText>Remaining time to bet</RemainingTimeText>
-      <TimerValue hurry={minutes === 0 && seconds < 10}>
+      <RemainingTimeText>Result is available in</RemainingTimeText>
+      <TimerValue hurry={minutes === 0 && seconds < 11}>
         {minutes < 10 ? 0 : null}
         {minutes}:{seconds < 10 ? 0 : null}
         {seconds}
@@ -29,12 +30,10 @@ const renderer = ({ minutes, seconds, completed }) =>
     </CustomTimer>
   );
 
-const CountdownTimer = () => {
-  return (
-    <CountdownTimerContainer>
-      <Countdown date={Date.now() + 15000} renderer={renderer} />
-    </CountdownTimerContainer>
-  );
-};
+const CountdownTimer = ({ remainingTime }) => (
+  <CountdownTimerContainer>
+    <Countdown date={Date.now() + remainingTime} renderer={renderer} />
+  </CountdownTimerContainer>
+);
 
 export default CountdownTimer;

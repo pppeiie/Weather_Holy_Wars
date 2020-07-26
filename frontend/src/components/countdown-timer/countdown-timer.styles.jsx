@@ -34,6 +34,6 @@ export const TimesUpText = styled.span`
 `;
 
 export const RemainingTimeText = styled.span`
-  font-size: 1.3em;
-  color: cornflowerblue;
+  font-size: 1.5em;
+  color: blue;
 `;
