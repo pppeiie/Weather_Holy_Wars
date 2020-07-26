@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import Chart from 'react-apexcharts';
 
@@ -20,11 +21,11 @@ const PriceChart = () => {
     tooltip: {
       x: {
         show: true,
-        format: "yy' MMM dd - HH:mm"
+        format: "yy' MMM dd - HH:mm:ss"
       },
       y: {
         title: {
-          formatter: (seriesName) => `${seriesName} $`
+          formatter: seriesName => `${seriesName} $`
         }
       }
     },
@@ -61,7 +62,7 @@ const PriceChart = () => {
       categories: [],
       type: 'datetime',
       labels: {
-        format: "MMM 'dd HH:mm"
+        format: "MMM 'dd HH:mm:ss"
       },
       title: {
         style: {
@@ -85,32 +86,18 @@ const PriceChart = () => {
   const [options, setOptions] = useState(initialOptions);
   const [series, setSeries] = useState([]);
 
+  const history = useSelector(state => state.wallet.history);
+
   useEffect(() => {
-    const sampleTimes = [
-      '2020-07-26T00:00:00.000Z',
-      '2020-07-26T01:30:00.000Z',
-      '2020-07-26T02:30:00.000Z',
-      '2020-07-26T03:30:00.000Z',
-      '2020-07-26T04:30:00.000Z',
-      '2020-07-26T05:30:00.000Z',
-      '2020-07-26T06:30:00.000Z'
-    ];
-
-    const samplePrices = [
-      {
-        name: 'BTC / USD',
-        data: [9550.4, 9238.6, 9435.9, 9340.1, 9237.2, 9534.6, 9687.8]
-      }
-    ];
-
-    setOptions((options) => ({
+    setOptions(options => ({
       ...options,
       xaxis: {
-        categories: sampleTimes
+        categories: history.map(item => item.latestTime)
       }
     }));
-    setSeries(samplePrices);
-  }, []);
+
+    setSeries([{ name: 'BTC / USD', data: history.map(item => item.latestPrice) }]);
+  }, [history]);
 
   return (
     <PriceChartContainer>
