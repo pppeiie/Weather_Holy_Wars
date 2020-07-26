@@ -24,7 +24,7 @@ const PriceChart = () => {
       },
       y: {
         title: {
-          formatter: seriesName => `${seriesName} $`
+          formatter: (seriesName) => `${seriesName} $`
         }
       }
     },
@@ -103,7 +103,7 @@ const PriceChart = () => {
       }
     ];
 
-    setOptions(options => ({
+    setOptions((options) => ({
       ...options,
       xaxis: {
         categories: sampleTimes
