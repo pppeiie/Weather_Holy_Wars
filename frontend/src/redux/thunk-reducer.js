@@ -5,6 +5,10 @@ const initialState = {
   address: '',
   balance: '',
   shortAddress: '',
+  MyContractReference: null, // contract
+  lastPrice: null,
+  lastTime: null,
+  history: [],
 };
 
 const WalletReducer = (state = initialState, action) => {
@@ -21,6 +25,16 @@ const WalletReducer = (state = initialState, action) => {
         address: action.address,
         balance: action.balance,
         shortAddress: action.shortAddress,
+      };
+    case actions.INIT_CONTRACT:
+      return {
+        ...state,
+        MyContractReference: action.MyContractReference,
+      };
+    case actions.UPDATE_HISTORY:
+      return {
+        ...state,
+        history: action.history,
       };
     default:
       return state;
