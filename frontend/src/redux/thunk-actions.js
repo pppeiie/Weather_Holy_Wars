@@ -94,7 +94,6 @@ export const UPDATE_HISTORY = 'UPDATE_HISTORY';
 export const updateHistory = () => async (dispatch, getState) => {
   var state = getState();
   // your address
-  // var web3 = state.wallet.web3;
   var from = state.wallet.address;
   var contract = state.wallet.MyContractReference;
 
@@ -130,4 +129,25 @@ export const updateHistory = () => async (dispatch, getState) => {
         console.log(e);
       });
   }
+};
+
+export const bet = (_choice, _amount) => async (dispatch, getState) => {
+  var state = getState();
+  // your address
+  var web3 = state.wallet.web3;
+  var from = state.wallet.address;
+  var contract = state.wallet.MyContractReference;
+
+  _amount = web3.utils.toWei(_amount.toString(), 'ether');
+  await contract.methods
+    .beting(_choice, _amount)
+    .send({ from: from, value: _amount })
+    .then(() => {
+      // transaction success
+      console.log('transaction successfully');
+    })
+    .catch((e) => {
+      // transaction falls
+      console.log('error : ', e);
+    });
 };

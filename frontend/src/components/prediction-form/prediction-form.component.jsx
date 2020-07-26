@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import * as walletActions from '../../redux/thunk-actions';
 
 import PredictingSelection from '../predicting-selection/predicting-selection.component';
 import SubmittedAnnouncement from '../submitted-announcement/submitted-announcement.component';
@@ -22,13 +24,7 @@ import {
   SvgIcon
 } from '@material-ui/core';
 
-import {
-  TrendingUp,
-  TrendingDown,
-  Reorder,
-  Navigation,
-  Close
-} from '@material-ui/icons';
+import { TrendingUp, TrendingDown, Reorder, Navigation, Close } from '@material-ui/icons';
 
 import { ReactComponent as EthereumIcon } from '../../assets/icons/ethereum-icon.svg';
 
@@ -39,6 +35,7 @@ import {
 } from './prediction-form.styles';
 
 const PredictionForm = () => {
+  const dispatch = useDispatch();
   const [prediction, setPrediction] = useState('');
 
   const [stake, setStake] = useState(1);
@@ -55,7 +52,7 @@ const PredictionForm = () => {
 
   const { up, down, unchanged } = isSelected;
 
-  const getPrediction = prediction => {
+  const getPrediction = (prediction) => {
     switch (prediction) {
       case 'up':
         return 'GO UP';
@@ -71,7 +68,7 @@ const PredictionForm = () => {
     }
   };
 
-  const handlePredictionChange = event => {
+  const handlePredictionChange = (event) => {
     const { value } = event.target;
 
     setPrediction(value);
@@ -79,21 +76,19 @@ const PredictionForm = () => {
     setIsSelected({
       ...Object.keys(isSelected).reduce(
         (reduced, key) =>
-          key === value
-            ? { ...reduced, [key]: true }
-            : { ...reduced, [key]: false },
+          key === value ? { ...reduced, [key]: true } : { ...reduced, [key]: false },
         {}
       )
     });
   };
 
-  const handleStakeChange = event => {
+  const handleStakeChange = (event) => {
     const { value } = event.target;
 
     setStake(value);
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     setIsDialogOpened(true);
@@ -101,19 +96,20 @@ const PredictionForm = () => {
 
   const handleConfirm = () => {
     setIsSnackbarOpened(true);
+    let choice;
+    if (prediction === 'up') choice = 0;
+    else if (prediction === 'unchanged') choice = 1;
+    else choice = 2;
+    dispatch(walletActions.bet(choice, stake));
   };
 
   return (
     <PredictionFormContainer>
       {isAnnouncementShowed ? (
-        <SubmittedAnnouncement
-          handleClick={() => setIsAnnouncementShowed(false)}
-        />
+        <SubmittedAnnouncement handleClick={() => setIsAnnouncementShowed(false)} />
       ) : (
         <form onSubmit={handleSubmit}>
-          <SelectionLabel>
-            I think the BTC price after 1 hour will
-          </SelectionLabel>
+          <SelectionLabel>I think the BTC price after 1 hour will</SelectionLabel>
           <RadioGroup value={prediction} onChange={handlePredictionChange}>
             <FormControlLabel
               value='up'
@@ -193,19 +189,14 @@ const PredictionForm = () => {
         <DialogContent>
           <DialogContentText>
             You have just predicted that the BTC's exchange rate will{' '}
-            <b>{getPrediction(prediction)}</b> in the next hour and bet{' '}
-            <b>{stake} ETH</b>.
+            <b>{getPrediction(prediction)}</b> in the next hour and bet <b>{stake} ETH</b>.
             <br />
-            If you were right, you would receive <b>{stake * 2.9} ETH</b>.
-            Otherwise, you will lose all the stake.
+            If you were right, you would receive <b>{stake * 2.9} ETH</b>. Otherwise, you will lose
+            all the stake.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => setIsDialogOpened(false)}
-            color='primary'
-            autoFocus
-          >
+          <Button onClick={() => setIsDialogOpened(false)} color='primary' autoFocus>
             Disagree
           </Button>
           <Button
@@ -230,11 +221,7 @@ const PredictionForm = () => {
         message='Thank you. Please wait for the result.'
         action={
           <React.Fragment>
-            <IconButton
-              size='small'
-              color='inherit'
-              onClick={() => setIsSnackbarOpened(false)}
-            >
+            <IconButton size='small' color='inherit' onClick={() => setIsSnackbarOpened(false)}>
               <Close fontSize='small' />
             </IconButton>
           </React.Fragment>
