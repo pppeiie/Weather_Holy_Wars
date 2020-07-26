@@ -27,3 +27,17 @@ export const OptionLink = styled(Link)`
   padding: 10px 15px;
   cursor: pointer;
 `;
+
+export const MenuOption = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const MenuOptionDescription = styled.span`
+  font-size: small;
+  font-weight: lighter;
+`;
+
+export const MenuOptionContent = styled.span`
+  font-weight: bold;
+`;

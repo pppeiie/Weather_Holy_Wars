@@ -1,25 +1,34 @@
-import React from 'react';
-import { Button, Menu, MenuItem, Badge, makeStyles } from '@material-ui/core';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+
+import { Button, Menu, MenuItem, Badge, makeStyles } from '@material-ui/core';
+
 import { ReactComponent as Logo } from '../../assets/icons/logo.svg';
+import { ReactComponent as MetaMask } from '../../assets/icons/metamask-icon.svg';
 
-import { HeaderContainer, LogoContainer } from './header.styles';
+import {
+  HeaderContainer,
+  LogoContainer,
+  MenuOption,
+  MenuOptionDescription,
+  MenuOptionContent
+} from './header.styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   success: {
     '& span': {
-      backgroundColor: '#28a745',
-    },
-  },
+      backgroundColor: '#28a745'
+    }
+  }
 }));
 
 const Header = () => {
-  const wallet = useSelector((state) => state.wallet);
+  const wallet = useSelector(state => state.wallet);
   const classes = useStyles();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -33,16 +42,7 @@ const Header = () => {
         <Logo style={{ width: 110, height: 'auto' }} />
       </LogoContainer>
       <div>
-        <Button
-          style={{
-            color: 'white',
-            border: '1px solid white',
-          }}
-          variant='outlined'
-          aria-controls='simple-menu'
-          aria-haspopup='true'
-          onClick={handleClick}
-        >
+        <Button variant='outlined' onClick={handleClick} style={{ border: 'none' }}>
           {!!wallet.web3 ? (
             <Badge
               style={{ margin: '0px 10px 0px 0px' }}
@@ -52,22 +52,30 @@ const Header = () => {
           ) : (
             <Badge style={{ margin: '0px 10px 0px 0px' }} color='error' variant='dot' />
           )}
-          MetaMask
+          <MetaMask />
         </Button>
-
         <Menu
-          id='simple-menu'
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
           onClose={handleClose}
           transformOrigin={{
             vertical: 'bottom',
-            horizontal: 'center',
+            horizontal: 'center'
           }}
         >
-          <MenuItem>{wallet.shortAddress}</MenuItem>
-          <MenuItem>{wallet.balance} Eth</MenuItem>
+          <MenuItem>
+            <MenuOption>
+              <MenuOptionDescription>Connected to</MenuOptionDescription>
+              <MenuOptionContent>{wallet.shortAddress}</MenuOptionContent>
+            </MenuOption>
+          </MenuItem>
+          <MenuItem>
+            <MenuOption>
+              <MenuOptionDescription>Balance</MenuOptionDescription>
+              <MenuOptionContent>{wallet.balance} ETH</MenuOptionContent>
+            </MenuOption>
+          </MenuItem>
           <MenuItem>Disconnect</MenuItem>
         </Menu>
       </div>
