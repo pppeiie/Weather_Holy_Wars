@@ -9,12 +9,10 @@ export const HeaderContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(15, 34, 45, 0.9);
+  background-color: rgba(15, 34, 45, 0.95);
 `;
 
-export const LogoContainer = styled(Link)`
-  margin: 10px;
-`;
+export const LogoContainer = styled(Link)``;
 
 export const OptionsContainer = styled.div`
   width: 20%;
