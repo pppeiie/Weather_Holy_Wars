@@ -93,7 +93,7 @@ const Results = () => {
               return 'Lost';
 
             case '1':
-              return 'Winned';
+              return 'Won';
 
             default:
               return null;
@@ -127,10 +127,10 @@ const Results = () => {
           );
 
         if (status.toLowerCase() === 'done') {
-          if (result.toLowerCase() === 'winned')
+          if (result.toLowerCase() === 'won')
             return (
               <ResultAnnouncement
-                type='winned'
+                type='won'
                 title='Congratulations, prophet !'
                 description='You had an outstanding move in this bet. Reward will be sent to fill
                   your wallet immediately.'
