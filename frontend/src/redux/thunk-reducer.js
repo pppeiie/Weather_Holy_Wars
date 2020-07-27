@@ -18,6 +18,7 @@ const WalletReducer = (state = initialState, action) => {
         web3: action.web3,
         isConnect: action.isConnect
       };
+
     case actions.GET_USER_INFO:
       return {
         ...state,
@@ -25,16 +26,25 @@ const WalletReducer = (state = initialState, action) => {
         balance: action.balance,
         shortAddress: action.shortAddress
       };
+
     case actions.INIT_CONTRACT:
       return {
         ...state,
         MyContractReference: action.MyContractReference
       };
+
     case actions.UPDATE_HISTORY:
       return {
         ...state,
         history: action.history
       };
+
+    case actions.GET_ALL_BETS:
+      return {
+        ...state,
+        allBets: action.allBets
+      };
+
     default:
       return state;
   }
