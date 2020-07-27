@@ -167,3 +167,26 @@ export const getAllBetOfPlayer = () => async (dispatch, getState) => {
     });
   }
 };
+
+export const claim = _index => async (dispatch, getState) => {
+  var state = getState();
+  // your address
+  var from = state.wallet.address;
+  var contract = state.wallet.MyContractReference;
+
+  if (!!contract) {
+    console.log(_index);
+    await contract.methods
+      .claim(_index)
+      .send({ from })
+      .then(() => {
+        // transaction success
+        console.log('transaction successfully');
+        dispatch(getAllBetOfPlayer());
+      })
+      .catch(e => {
+        // transaction falls
+        console.log('error : ', e);
+      });
+  }
+};
