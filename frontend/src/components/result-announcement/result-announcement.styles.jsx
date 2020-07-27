@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const getResultType = ({ type }) => {
-  if (type === 'winned') return '#08ce96';
+  if (type === 'won') return '#08ce96';
   if (type === 'lost') return '#ff725e';
   return '#0f222d';
 };
