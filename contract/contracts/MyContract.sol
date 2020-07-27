@@ -131,6 +131,8 @@ contract MyContract {
               users[msg.sender][_index].isWin = 1;
               // transfer reward
               msg.sender.transfer(users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
+          }else{
+            users[msg.sender][_index].isWin = 0;
           }
           // lose just update status done
           users[msg.sender][_index].status = 1;
