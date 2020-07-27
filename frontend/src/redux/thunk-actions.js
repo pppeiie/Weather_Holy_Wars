@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import MyContract from '../contracts/MyContract.json';
 
 export const WEB3_CONNECT = 'WEB3_CONNECT';
-export const web3Connect = () => async (dispatch) => {
+export const web3Connect = () => async dispatch => {
   var web3;
   try {
     if (window.web3) {
@@ -42,7 +42,7 @@ export const web3Connect = () => async (dispatch) => {
   }
 };
 
-export const GET_USERINFO = 'GET_USERINFO';
+export const GET_USER_INFO = 'GET_USER_INFO';
 export const getProfile = () => async (dispatch, getState) => {
   const state = getState();
   let web3 = state.wallet.web3;
@@ -61,7 +61,7 @@ export const getProfile = () => async (dispatch, getState) => {
 
       const shortAddress = address.slice(0, 5) + '...' + address.slice(address.length - 4);
       dispatch({
-        type: GET_USERINFO,
+        type: GET_USER_INFO,
         address,
         balance,
         shortAddress
@@ -99,14 +99,14 @@ export const updateHistory = () => async (dispatch, getState) => {
   var contract = state.wallet.MyContractReference;
 
   function getDataAsync(value) {
-    return new Promise(async (resolve) => {
-      let lastestTime = await contract.methods.getPreviousTimestamp(value).call({ from });
-      let lastestPrice = await contract.methods.getPreviousAnswer(value).call({ from });
+    return new Promise(async resolve => {
+      let latestTime = await contract.methods.getPreviousTimestamp(value).call({ from });
+      let latestPrice = await contract.methods.getPreviousAnswer(value).call({ from });
 
-      lastestTime = new Date(parseInt(lastestTime + '000')).toISOString();
-      lastestPrice = lastestPrice / 100000000;
+      latestTime = new Date(parseInt(latestTime + '000')).toISOString();
+      latestPrice = latestPrice / 100000000;
 
-      resolve({ lastestPrice, lastestTime });
+      resolve({ latestPrice, latestTime });
     });
   }
 
@@ -119,15 +119,14 @@ export const updateHistory = () => async (dispatch, getState) => {
       promises.push(getDataAsync(i));
     }
     Promise.all(promises)
-      .then((results) => {
-        results = results.filter((result) => result.lastestPrice > 0);
-        console.log(results);
+      .then(results => {
+        results = results.filter(result => result.latestPrice > 0);
         dispatch({
           type: UPDATE_HISTORY,
           history: results
         });
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }

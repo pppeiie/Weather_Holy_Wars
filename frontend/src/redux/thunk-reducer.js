@@ -8,7 +8,7 @@ const initialState = {
   MyContractReference: null, // contract
   lastPrice: null,
   lastTime: null,
-  history: [],
+  history: []
 };
 
 const WalletReducer = (state = initialState, action) => {
@@ -17,24 +17,24 @@ const WalletReducer = (state = initialState, action) => {
       return {
         ...state,
         web3: action.web3,
-        isConnect: action.isConnect,
+        isConnect: action.isConnect
       };
-    case actions.GET_USERINFO:
+    case actions.GET_USER_INFO:
       return {
         ...state,
         address: action.address,
         balance: action.balance,
-        shortAddress: action.shortAddress,
+        shortAddress: action.shortAddress
       };
     case actions.INIT_CONTRACT:
       return {
         ...state,
-        MyContractReference: action.MyContractReference,
+        MyContractReference: action.MyContractReference
       };
     case actions.UPDATE_HISTORY:
       return {
         ...state,
-        history: action.history,
+        history: action.history
       };
     default:
       return state;
