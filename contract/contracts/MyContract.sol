@@ -92,7 +92,7 @@ contract MyContract {
     require(_choice == 0 || _choice == 1 || _choice == 2, "User's choice must in range");
 
     // push user request to BET
-    users[msg.sender].push(Bet(_amount, ref.latestTimestamp(), ref.latestAnswer(), _choice, 0, -1));
+    users[msg.sender].push(Bet(_amount, now, ref.latestAnswer(), _choice, 0, -1));
 
     rewardAmount += (_amount*3 - _amount/10);
   }
@@ -104,21 +104,21 @@ contract MyContract {
     uint256 latest = ref.latestRound();
 
     if((ref.latestTimestamp() <= users[msg.sender][_index].timeStart + 3600 )){
-        // win
-        if(((users[msg.sender][_index].lastPrice < ref.latestAnswer()) && users[msg.sender][_index].choice == 0 ) ||
-        ((users[msg.sender][_index].lastPrice == ref.latestAnswer()) && users[msg.sender][_index].choice == 1 ) ||
-        ((users[msg.sender][_index].lastPrice > ref.latestAnswer()) && users[msg.sender][_index].choice == 2 )){
-          users[msg.sender][_index].isWin = 1;
-          // transfer reward
-          msg.sender.transfer(users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
-        }else{
-          users[msg.sender][_index].isWin = 0;
-        }
-        // lose just update status done
-        users[msg.sender][_index].status = 1;
+      // win
+      if(((users[msg.sender][_index].lastPrice < ref.latestAnswer()) && users[msg.sender][_index].choice == 0 ) ||
+      ((users[msg.sender][_index].lastPrice == ref.latestAnswer()) && users[msg.sender][_index].choice == 1 ) ||
+      ((users[msg.sender][_index].lastPrice > ref.latestAnswer()) && users[msg.sender][_index].choice == 2 )){
+        users[msg.sender][_index].isWin = 1;
+        // transfer reward
+        msg.sender.transfer(users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
+      }else{
+        users[msg.sender][_index].isWin = 0;
+      }
+      // lose just update status done
+      users[msg.sender][_index].status = 1;
 
-        // unlock frozen amount
-        rewardAmount -= (users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
+      // unlock frozen amount
+      rewardAmount -= (users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
     }else{
       // loop 60 time ~ 60 hours
       for(uint256 i = 1; i <= 60; i++){
@@ -139,5 +139,7 @@ contract MyContract {
           rewardAmount -= (users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
           break;
         }
+      }
     }
+  }
 }
