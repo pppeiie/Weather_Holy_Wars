@@ -12,7 +12,7 @@ import {
   TimerDescription
 } from './countdown-timer.styles';
 
-const renderer = ({ minutes, seconds, completed, transactionIndex }) =>
+const renderer = ({ minutes, seconds, completed, props: { transactionIndex } }) =>
   completed ? (
     <ReadyAnnouncement transactionIndex={transactionIndex} />
   ) : (
@@ -32,7 +32,11 @@ const renderer = ({ minutes, seconds, completed, transactionIndex }) =>
 
 const CountdownTimer = ({ remainingTime, transactionIndex }) => (
   <CountdownTimerContainer>
-    <Countdown date={Date.now() + remainingTime} renderer={renderer} />
+    <Countdown
+      date={Date.now() + remainingTime}
+      renderer={renderer}
+      transactionIndex={transactionIndex}
+    />
   </CountdownTimerContainer>
 );
 
