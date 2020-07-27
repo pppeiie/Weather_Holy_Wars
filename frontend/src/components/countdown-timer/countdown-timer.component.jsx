@@ -12,9 +12,9 @@ import {
   TimerDescription
 } from './countdown-timer.styles';
 
-const renderer = ({ minutes, seconds, completed }) =>
+const renderer = ({ minutes, seconds, completed, transactionIndex }) =>
   completed ? (
-    <ReadyAnnouncement />
+    <ReadyAnnouncement transactionIndex={transactionIndex} />
   ) : (
     <CustomTimer>
       <RemainingTimeText>Result is available in</RemainingTimeText>
@@ -30,7 +30,7 @@ const renderer = ({ minutes, seconds, completed }) =>
     </CustomTimer>
   );
 
-const CountdownTimer = ({ remainingTime }) => (
+const CountdownTimer = ({ remainingTime, transactionIndex }) => (
   <CountdownTimerContainer>
     <Countdown date={Date.now() + remainingTime} renderer={renderer} />
   </CountdownTimerContainer>

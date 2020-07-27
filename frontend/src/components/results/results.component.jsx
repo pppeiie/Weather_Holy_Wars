@@ -113,7 +113,7 @@ const Results = () => {
     expandableRows: true,
     expandableRowsHeader: true,
     expandableRowsOnClick: true,
-    renderExpandableRow: rowData => {
+    renderExpandableRow: (rowData, rowMeta) => {
       const [startedAt, , , , status, result] = rowData;
 
       const remainingTime = new Date(startedAt).getTime() + 3600000 - Date.now();
@@ -121,9 +121,9 @@ const Results = () => {
       const getRowExpansion = () => {
         if (status.toLowerCase() === 'pending')
           return remainingTime > 0 ? (
-            <CountdownTimer remainingTime={remainingTime} />
+            <CountdownTimer remainingTime={remainingTime} transactionIndex={rowMeta.dataIndex} />
           ) : (
-            <ReadyAnnouncement />
+            <ReadyAnnouncement transactionIndex={rowMeta.dataIndex} />
           );
 
         if (status.toLowerCase() === 'done') {
