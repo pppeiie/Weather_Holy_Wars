@@ -13,7 +13,7 @@ contract MyContract {
     int256 lastPrice;
     uint8 choice; // 0 < // 1 == // 2 >
     uint8 status; // 0 = not done // 1 = done
-    uint8 isWin;  // 0 = lost // 1 = win
+    int8 isWin;  //-1 = pending // 0 = lost // 1 = win
   }
 
   address Owner;                      // address of owner
@@ -85,6 +85,7 @@ contract MyContract {
 
   function beting(uint8 _choice, uint256 _amount) external payable {
     require(msg.value >= _amount, "Input not enough");
+    require((address(this).balance - rewardAmount) >= (_amount*3 - _amount/10),"contract don't have enough money for your bet");
 
     // _choice = 0 mean < going up
     // _choice = 1 mean = unchanged
@@ -92,7 +93,7 @@ contract MyContract {
     require(_choice == 0 || _choice == 1 || _choice == 2, "User's choice must in range");
 
     // push user request to BET
-    users[msg.sender].push(Bet(_amount, ref.latestTimestamp(), ref.latestAnswer(), _choice, 0, 0));
+    users[msg.sender].push(Bet(_amount, ref.latestTimestamp(), ref.latestAnswer(), _choice, 0, -1));
 
     rewardAmount += (_amount*3 - _amount/10);
   }
@@ -108,9 +109,11 @@ contract MyContract {
         if(((users[msg.sender][_index].lastPrice < ref.latestAnswer()) && users[msg.sender][_index].choice == 0 ) ||
         ((users[msg.sender][_index].lastPrice == ref.latestAnswer()) && users[msg.sender][_index].choice == 1 ) ||
         ((users[msg.sender][_index].lastPrice > ref.latestAnswer()) && users[msg.sender][_index].choice == 2 )){
-            users[msg.sender][_index].isWin = 1;
-            // transfer reward
-            msg.sender.transfer(users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
+          users[msg.sender][_index].isWin = 1;
+          // transfer reward
+          msg.sender.transfer(users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
+        }else{
+          users[msg.sender][_index].isWin = 0;
         }
         // lose just update status done
         users[msg.sender][_index].status = 1;
