@@ -6,8 +6,7 @@ const initialState = {
   balance: '',
   shortAddress: '',
   MyContractReference: null, // contract
-  lastPrice: null,
-  lastTime: null,
+  allBets: [],
   history: []
 };
 

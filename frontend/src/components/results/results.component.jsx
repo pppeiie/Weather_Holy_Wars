@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as walletActions from '../../redux/thunk-actions';
 
 import MUIDataTable from 'mui-datatables';
 
@@ -15,6 +17,8 @@ import { ResultsContainer } from './results.styles';
 
 const Results = () => {
   const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const wallet = useSelector((state) => state.wallet);
 
   const columns = [
     {
@@ -71,18 +75,14 @@ const Results = () => {
     expandableRows: true,
     expandableRowsHeader: true,
     expandableRowsOnClick: true,
-    renderExpandableRow: rowData => {
+    renderExpandableRow: (rowData) => {
       const [startedTime, , , , status, result] = rowData;
 
       const remainingTime = Date.now() - new Date(startedTime);
 
       const getRowExpansion = () => {
         if (status.toLowerCase() === 'pending')
-          return (
-            <CountdownTimer
-              remainingTime={remainingTime < 3600000 ? remainingTime : 0}
-            />
-          );
+          return <CountdownTimer remainingTime={remainingTime < 3600000 ? remainingTime : 0} />;
 
         if (status.toLowerCase() === 'ready') return <ReadyAnnouncement />;
 
@@ -112,9 +112,7 @@ const Results = () => {
 
       return (
         <TableRow>
-          <TableCell colSpan={rowData.length + 1}>
-            {getRowExpansion()}
-          </TableCell>
+          <TableCell colSpan={rowData.length + 1}>{getRowExpansion()}</TableCell>
         </TableRow>
       );
     },
@@ -165,14 +163,13 @@ const Results = () => {
     setData(sampleData);
   }, []);
 
+  useEffect(() => {
+    dispatch(walletActions.getAllBetOfPlayer());
+  }, [dispatch, wallet.MyContractReference]);
+
   return (
     <ResultsContainer>
-      <MUIDataTable
-        title='Bet Results'
-        columns={columns}
-        options={options}
-        data={data}
-      />
+      <MUIDataTable title='Bet Results' columns={columns} options={options} data={data} />
     </ResultsContainer>
   );
 };
