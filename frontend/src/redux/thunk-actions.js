@@ -161,7 +161,6 @@ export const getAllBetOfPlayer = () => async (dispatch, getState) => {
   var contract = state.wallet.MyContractReference;
   if (!!contract) {
     let allBets = await contract.methods.getAllBetOfPlayer().call({ from });
-    console.log('allBets', allBets);
     dispatch({
       type: GET_ALL_BETS,
       allBets

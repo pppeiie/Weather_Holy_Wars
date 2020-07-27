@@ -4,7 +4,6 @@ pragma experimental ABIEncoderV2;
 import "@chainlink/contracts/src/v0.5/interfaces/AggregatorInterface.sol";
 
 contract MyContract {
-
   AggregatorInterface internal ref;
 
   struct Bet {
@@ -140,7 +139,5 @@ contract MyContract {
           rewardAmount -= (users[msg.sender][_index].amount*3 - users[msg.sender][_index].amount/10);
           break;
         }
-      }
     }
-  }
 }
