@@ -139,15 +139,32 @@ export const bet = (_choice, _amount) => async (dispatch, getState) => {
   var contract = state.wallet.MyContractReference;
 
   _amount = web3.utils.toWei(_amount.toString(), 'ether');
-  await contract.methods
-    .beting(_choice, _amount)
-    .send({ from: from, value: _amount })
-    .then(() => {
-      // transaction success
-      console.log('transaction successfully');
-    })
-    .catch((e) => {
-      // transaction falls
-      console.log('error : ', e);
+  if (!!contract)
+    await contract.methods
+      .beting(_choice, _amount)
+      .send({ from: from, value: _amount })
+      .then(() => {
+        // transaction success
+        console.log('transaction successfully');
+      })
+      .catch(e => {
+        // transaction falls
+        console.log('error : ', e);
+      });
+};
+
+export const GET_ALL_BETS = 'GET_ALL_BETS';
+export const getAllBetOfPlayer = () => async (dispatch, getState) => {
+  var state = getState();
+  // your address
+  var from = state.wallet.address;
+  var contract = state.wallet.MyContractReference;
+  if (!!contract) {
+    let allBets = await contract.methods.getAllBetOfPlayer().call({ from });
+    console.log('allBets', allBets);
+    dispatch({
+      type: GET_ALL_BETS,
+      allBets
     });
+  }
 };
