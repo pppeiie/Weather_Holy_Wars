@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import accounting from 'accounting';
+
 import * as walletActions from '../../redux/thunk-actions';
 
 import MUIDataTable from 'mui-datatables';
@@ -17,50 +19,86 @@ import { ResultsContainer } from './results.styles';
 
 const Results = () => {
   const [data, setData] = useState([]);
+
   const dispatch = useDispatch();
-  const wallet = useSelector((state) => state.wallet);
+
+  const wallet = useSelector(state => state.wallet);
 
   const columns = [
     {
-      name: 'startedAt',
+      name: 'timeStart',
       label: 'Started at',
       options: {
-        filter: true
+        filter: true,
+        customBodyRender: value => new Date(value * 1000).toLocaleString()
       }
     },
     {
-      name: 'stake',
+      name: 'amount',
       label: 'Stake (ETH)',
       options: {
-        filter: true
+        filter: true,
+        customBodyRender: value => parseFloat(value.slice(0, value.length - 14)) / 10000
       }
     },
     {
-      name: 'bettedTimePrice',
-      label: 'Price at bet time ($)',
+      name: 'lastPrice',
+      label: 'Price at bet time',
       options: {
-        filter: true
+        filter: true,
+        customBodyRender: value => accounting.formatMoney(value.slice(0, value.length - 8))
       }
     },
     {
-      name: 'prediction',
+      name: 'choice',
       label: 'Prediction',
       options: {
-        filter: false
+        filter: false,
+        customBodyRender: value => {
+          switch (value) {
+            case '0':
+              return 'Go up';
+
+            case '1':
+              return 'Unchanged';
+
+            case '2':
+              return 'Go down';
+
+            default:
+              return null;
+          }
+        }
       }
     },
     {
       name: 'status',
       label: 'Status',
       options: {
-        filter: true
+        filter: true,
+        customBodyRender: value => (value === '0' ? 'Pending' : value === '1' ? 'Done' : null)
       }
     },
     {
-      name: 'result',
+      name: 'isWin',
       label: 'Result',
       options: {
-        filter: true
+        filter: true,
+        customBodyRender: value => {
+          switch (value) {
+            case '-1':
+              return 'Pending';
+
+            case '0':
+              return 'Lost';
+
+            case '1':
+              return 'Winned';
+
+            default:
+              return null;
+          }
+        }
       }
     }
   ];
@@ -75,22 +113,24 @@ const Results = () => {
     expandableRows: true,
     expandableRowsHeader: true,
     expandableRowsOnClick: true,
-    renderExpandableRow: (rowData) => {
-      const [startedTime, , , , status, result] = rowData;
+    renderExpandableRow: rowData => {
+      const [startedAt, , , , status, result] = rowData;
 
-      const remainingTime = Date.now() - new Date(startedTime);
+      const remainingTime = new Date(startedAt).getTime() + 3600000 - Date.now();
 
       const getRowExpansion = () => {
         if (status.toLowerCase() === 'pending')
-          return <CountdownTimer remainingTime={remainingTime < 3600000 ? remainingTime : 0} />;
-
-        if (status.toLowerCase() === 'ready') return <ReadyAnnouncement />;
+          return remainingTime > 0 ? (
+            <CountdownTimer remainingTime={remainingTime} />
+          ) : (
+            <ReadyAnnouncement />
+          );
 
         if (status.toLowerCase() === 'done') {
-          if (result.toLowerCase() === 'win')
+          if (result.toLowerCase() === 'winned')
             return (
               <ResultAnnouncement
-                type='win'
+                type='winned'
                 title='Congratulations, prophet !'
                 description='You had an outstanding move in this bet. Reward will be sent to fill
                   your wallet immediately.'
@@ -98,10 +138,10 @@ const Results = () => {
               />
             );
 
-          if (result.toLowerCase() === 'lose')
+          if (result.toLowerCase() === 'lost')
             return (
               <ResultAnnouncement
-                type='lose'
+                type='lost'
                 title='What a pity !'
                 description='You were unlucky this time. The stake has lost but keep trying hard and you will smile again very soon.'
                 illustration={LosingIllustration}
@@ -123,49 +163,14 @@ const Results = () => {
   };
 
   useEffect(() => {
-    const sampleDate = new Date(Date.now() - 15000);
-
-    const sampleData = [
-      {
-        startedAt: sampleDate.toLocaleString(),
-        stake: 0.1,
-        bettedTimePrice: 9320.1,
-        prediction: 'Go down',
-        status: 'Pending',
-        result: 'Pending'
-      },
-      {
-        startedAt: '7/26/2020, 12:30:00 AM',
-        stake: 0.15,
-        bettedTimePrice: 9290.6,
-        prediction: 'Go up',
-        status: 'Ready',
-        result: 'Pending'
-      },
-      {
-        startedAt: '7/26/2020, 7:30:00 AM',
-        stake: 0.25,
-        bettedTimePrice: 9472.6,
-        prediction: 'Go down',
-        status: 'Done',
-        result: 'Lose'
-      },
-      {
-        startedAt: '7/25/2020, 9:30:00 PM',
-        stake: 0.5,
-        bettedTimePrice: 9535.7,
-        prediction: 'Go up',
-        status: 'Done',
-        result: 'Win'
-      }
-    ];
-
-    setData(sampleData);
-  }, []);
+    dispatch(walletActions.getAllBetOfPlayer());
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(walletActions.getAllBetOfPlayer());
-  }, [dispatch, wallet.MyContractReference]);
+    const { allBets } = wallet;
+
+    setData(allBets.map(bet => Object.assign({}, bet)));
+  }, [wallet]);
 
   return (
     <ResultsContainer>
