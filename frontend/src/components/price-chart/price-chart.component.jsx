@@ -14,6 +14,14 @@ const PriceChart = () => {
         enabled: true
       }
     },
+    title: {
+      text: 'Bitcoin Exchange Rate',
+      align: 'center',
+      style: {
+        fontSize: '24px',
+        color: '#459de0'
+      }
+    },
     colors: ['#77B6EA'],
     dataLabels: {
       enabled: true
@@ -31,14 +39,6 @@ const PriceChart = () => {
     },
     stroke: {
       curve: 'smooth'
-    },
-    title: {
-      text: '',
-      align: 'center',
-      style: {
-        fontSize: '20px',
-        color: '#2471A3'
-      }
     },
     fill: {
       type: 'gradient',
