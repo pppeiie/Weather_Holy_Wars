@@ -1,6 +1,8 @@
-<p align="center">
-    <img width="500px" src="https://github.com/DrNguyen2525/Crypto_Supreme_Prophecy/blob/master/docs/images/logo.png" alt="logo" />
-</p>
+<div align="center">
+    <a href="https://cryptophecy-5392d.web.app/" target="_blank">
+        <img src="https://github.com/DrNguyen2525/Crypto_Supreme_Prophecy/blob/master/docs/images/logo.svg" alt="logo" width="500" />
+    </a>
+</div>
 <p>
   <img src="https://img.shields.io/badge/version-1.0-blue.svg" alt="version-badge" />
 </p>
