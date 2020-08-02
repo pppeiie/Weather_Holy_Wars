@@ -141,15 +141,15 @@ export const bet = (_choice, _amount) => async (dispatch, getState) => {
   _amount = web3.utils.toWei(_amount.toString(), 'ether');
   if (!!contract)
     await contract.methods
-      .beting(_choice, _amount)
+      .betting(_choice, _amount)
       .send({ from: from, value: _amount })
       .then(() => {
         // transaction success
-        console.log('transaction successfully');
+        console.log('Transaction success.');
       })
       .catch(e => {
-        // transaction falls
-        console.log('error : ', e);
+        // transaction fails
+        console.log('Error: ', e);
       });
 };
 
@@ -175,18 +175,17 @@ export const claim = _index => async (dispatch, getState) => {
   var contract = state.wallet.MyContractReference;
 
   if (!!contract) {
-    console.log(_index);
     await contract.methods
       .claim(_index)
       .send({ from })
       .then(() => {
         // transaction success
-        console.log('transaction successfully');
+        console.log('Transaction success.');
         dispatch(getAllBetOfPlayer());
       })
       .catch(e => {
-        // transaction falls
-        console.log('error : ', e);
+        // transaction fails
+        console.log('Error: ', e);
       });
   }
 };
